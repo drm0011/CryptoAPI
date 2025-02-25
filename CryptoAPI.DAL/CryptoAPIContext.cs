@@ -14,6 +14,6 @@ namespace CryptoAPI.DAL
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; } //test
     }
 }

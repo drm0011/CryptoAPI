@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoAPI.Controllers
 {
+    [ApiController]
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;

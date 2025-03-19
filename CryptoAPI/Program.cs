@@ -23,6 +23,9 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient<ICoinGeckoService, CoinGeckoService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
+builder.Services.AddScoped<IPortfolioService, PortfolioService>();
+
 
 builder.Services.AddCors(options =>
 {

@@ -13,5 +13,6 @@ namespace CryptoAPI.DAL.Entities
         public int Id { get; init; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public Portfolio Portfolio { get; set; }
     }
 }

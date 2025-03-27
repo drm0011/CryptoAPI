@@ -53,7 +53,8 @@ namespace CryptoAPI.BLL
             var token = new JwtSecurityToken(
                 _config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
-                new List<Claim> { new Claim(ClaimTypes.Name, user.Username) },
+                new List<Claim> { new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),},
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: creds
             );

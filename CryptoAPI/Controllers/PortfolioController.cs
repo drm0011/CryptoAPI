@@ -7,6 +7,7 @@ using System.Security.Claims;
 namespace CryptoAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     public class PortfolioController : Controller
     {
 
@@ -20,26 +21,55 @@ namespace CryptoAPI.Controllers
         [HttpGet("portfolio")]
         public async Task<IActionResult> GetPortfolio()
         {
-            //var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var portfolio = await _portfolioService.GetPortfolioAsync(1);
+            var userId = GetCurrentUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var portfolio = await _portfolioService.GetPortfolioAsync(userId.Value);
             return Ok(portfolio);
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> AddPortfolioItem([FromBody] PortfolioItemDto portfolioItemDto)
         {
-            //var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            await _portfolioService.AddPortfolioItemAsync(2, portfolioItemDto);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = GetCurrentUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _portfolioService.AddPortfolioItemAsync(userId.Value, portfolioItemDto);
             return Ok();
         }
 
         [HttpDelete("remove/{coinId}")]
         public async Task<IActionResult> RemovePortfolioItem(string coinId)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            await _portfolioService.RemovePortfolioItemAsync(userId, coinId);
+            var userId = GetCurrentUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _portfolioService.RemovePortfolioItemAsync(userId.Value, coinId);
             return Ok();
         }
 
+        private int? GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+            {
+                return null;
+            }
+            return userId;
+        }
     }
 }

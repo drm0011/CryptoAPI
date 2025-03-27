@@ -13,6 +13,8 @@ namespace CryptoAPI.DAL
             CreateMap<Core.Models.User, DAL.Entities.User>().ReverseMap();
             CreateMap<PortfolioItemDto, PortfolioItem>();
             CreateMap<PortfolioItem, PortfolioItemDto>();
+            CreateMap<Portfolio, PortfolioDto>();
+            CreateMap<PortfolioDto, Portfolio>();
         }
     }
 }

@@ -33,11 +33,21 @@ namespace CryptoAPI.BLL
 
         public async Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto)
         {
+            if (portfolioItemDto == null)
+            {
+                return; //throw appropriate exception
+            } 
+
             await _portfolioRepo.AddPortfolioItemAsync(userId, portfolioItemDto);
         }
 
         public async Task RemovePortfolioItemAsync(int userId, string coinId)
         {
+            if (string.IsNullOrEmpty(coinId))
+            {
+                return; //throw appropriate exception
+            }
+
             await _portfolioRepo.RemovePortfolioItemAsync(userId, coinId);
         }
     }

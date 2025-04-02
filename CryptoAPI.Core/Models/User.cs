@@ -1,18 +1,15 @@
-﻿using Microsoft.Identity.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoAPI.DAL.Entities
+namespace CryptoAPI.Core.Models
 {
     public class User
     {
-        public int Id { get; init; }
+        public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public Portfolio Portfolio { get; set; }
     }
 }

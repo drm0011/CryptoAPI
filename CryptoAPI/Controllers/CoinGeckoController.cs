@@ -1,9 +1,11 @@
 ﻿using CryptoAPI.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     public class CoinGeckoController : Controller
     {
         private readonly ICoinGeckoService _coinGeckoService;

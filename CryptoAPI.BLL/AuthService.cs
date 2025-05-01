@@ -1,5 +1,4 @@
-﻿using CryptoAPI.Core.DTOs;
-using CryptoAPI.Core.Interfaces;
+﻿using CryptoAPI.Core.Interfaces;
 using CryptoAPI.Core.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -24,7 +23,7 @@ namespace CryptoAPI.BLL
             _config = config;
         }
 
-        public async Task<string> RegisterAsync(UserDto userDto)
+        public async Task<string> RegisterAsync(User userDto)
         {
             if (await _userRepo.GetByUsernameAsync(userDto.Username) != null)
                 throw new Exception("User already exists");
@@ -36,7 +35,7 @@ namespace CryptoAPI.BLL
             return GenerateJwtToken(user);
         }
 
-        public async Task<string> LoginAsync(LoginDto loginDto)
+        public async Task<string> LoginAsync(User loginDto)
         {
             var user = await _userRepo.GetByUsernameAsync(loginDto.Username);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))

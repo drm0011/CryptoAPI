@@ -1,5 +1,6 @@
 ﻿using CryptoAPI.Core.DTOs;
 using CryptoAPI.Core.Interfaces;
+using CryptoAPI.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoAPI.Controllers
@@ -16,7 +17,13 @@ namespace CryptoAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var token = await _authService.RegisterAsync(userDto);
+            var user = new User //use automapper
+            {
+                Username = userDto.Username,
+                Password = userDto.Password
+            };
+
+            var token = await _authService.RegisterAsync(user);
             return Ok(new { token });
         }
 
@@ -26,7 +33,13 @@ namespace CryptoAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var token = await _authService.LoginAsync(loginDto);
+            var user = new User
+            {
+                Username = loginDto.Username,
+                Password = loginDto.Password
+            };
+
+            var token = await _authService.LoginAsync(user);
             return Ok(new { token });
         }
     }

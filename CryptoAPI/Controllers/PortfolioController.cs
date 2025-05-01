@@ -1,5 +1,6 @@
 ﻿using CryptoAPI.Core.DTOs;
 using CryptoAPI.Core.Interfaces;
+using CryptoAPI.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -31,16 +32,21 @@ namespace CryptoAPI.Controllers
         public async Task<IActionResult> AddPortfolioItem([FromBody] PortfolioItemDto portfolioItemDto)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             var userId = GetCurrentUserId();
-            
 
-            await _portfolioService.AddPortfolioItemAsync(userId.Value, portfolioItemDto);
+            var portfolioItem = new PortfolioItem
+            {
+                CoinId = portfolioItemDto.CoinId,
+                CoinName = portfolioItemDto.CoinName,
+                Amount = portfolioItemDto.Amount
+            };
+
+            await _portfolioService.AddPortfolioItemAsync(userId.Value, portfolioItem);
             return Ok();
         }
+
 
         [HttpDelete("remove/{coinId}")]
         public async Task<IActionResult> RemovePortfolioItem(string coinId)

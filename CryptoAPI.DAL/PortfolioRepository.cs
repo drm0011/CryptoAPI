@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CryptoAPI.Core.DTOs;
 using CryptoAPI.Core.Interfaces;
 using CryptoAPI.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +18,16 @@ namespace CryptoAPI.DAL
             _mapper = mapper;
         }
 
-        public async Task<PortfolioDto> GetPortfolioByUserIdAsync(int userId)
+        public async Task<Core.Models.Portfolio> GetPortfolioByUserIdAsync(int userId)
         {
             var portfolioEntity = await _context.Portfolio
                 .Include(p => p.PortfolioItems)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            return _mapper.Map<PortfolioDto>(portfolioEntity);
+            return _mapper.Map<Core.Models.Portfolio>(portfolioEntity);
         }
 
-        public async Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto) //remove dto here and create domain model for portfolio
+        public async Task AddPortfolioItemAsync(int userId, Core.Models.PortfolioItem portfolioItemDto) //remove dto here and create domain model for portfolio
         {
             var portfolioEntity = await _context.Portfolio
                 .Include(p => p.PortfolioItems)

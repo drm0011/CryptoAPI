@@ -28,7 +28,7 @@ namespace CryptoAPI.DAL
             return _mapper.Map<PortfolioDto>(portfolioEntity);
         }
 
-        public async Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto)
+        public async Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto) //remove dto here and create domain model for portfolio
         {
             var portfolioEntity = await _context.Portfolio
                 .Include(p => p.PortfolioItems)

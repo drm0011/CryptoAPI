@@ -10,7 +10,7 @@ namespace CryptoAPI.Core.Interfaces
     public interface IPortfolioService
     {
         Task<PortfolioDto> GetPortfolioAsync(int userId);
-        Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto);
+        Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto); //change to domain model
         Task RemovePortfolioItemAsync(int userId, string coinId);
     }
 }

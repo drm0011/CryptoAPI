@@ -9,7 +9,7 @@ namespace CryptoAPI.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> RegisterAsync(UserDto userDto);
+        Task<string> RegisterAsync(UserDto userDto); //change to domainmodel
         Task<string> LoginAsync(LoginDto loginDto);
     }
 }

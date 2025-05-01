@@ -1,5 +1,6 @@
 ﻿using CryptoAPI.Core.DTOs;
 using CryptoAPI.Core.Interfaces;
+using CryptoAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,10 @@ namespace CryptoAPI.BLL
         public async Task<PortfolioDto> GetPortfolioAsync(int userId)
         {
             var portfolio = await _portfolioRepo.GetPortfolioByUserIdAsync(userId);
+
+            if (portfolio == null)
+                throw new NotFoundException("Portfolio not found");
+
             return new PortfolioDto
             {
                 PortfolioItems = portfolio?.PortfolioItems.Select(pi => new PortfolioItemDto
@@ -34,9 +39,7 @@ namespace CryptoAPI.BLL
         public async Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto)
         {
             if (portfolioItemDto == null)
-            {
-                return; //throw appropriate exception
-            } 
+                throw new NotFoundException("Item not found");
 
             await _portfolioRepo.AddPortfolioItemAsync(userId, portfolioItemDto);
         }
@@ -44,9 +47,7 @@ namespace CryptoAPI.BLL
         public async Task RemovePortfolioItemAsync(int userId, string coinId)
         {
             if (string.IsNullOrEmpty(coinId))
-            {
-                return; //throw appropriate exception
-            }
+                throw new NotFoundException("Coin not found");
 
             await _portfolioRepo.RemovePortfolioItemAsync(userId, coinId);
         }

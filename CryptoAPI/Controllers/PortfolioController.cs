@@ -22,10 +22,6 @@ namespace CryptoAPI.Controllers
         public async Task<IActionResult> GetPortfolio()
         {
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
 
             var portfolio = await _portfolioService.GetPortfolioAsync(userId.Value);
             return Ok(portfolio);
@@ -40,10 +36,7 @@ namespace CryptoAPI.Controllers
             }
 
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
+            
 
             await _portfolioService.AddPortfolioItemAsync(userId.Value, portfolioItemDto);
             return Ok();
@@ -53,11 +46,7 @@ namespace CryptoAPI.Controllers
         public async Task<IActionResult> RemovePortfolioItem(string coinId)
         {
             var userId = GetCurrentUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
+            
             await _portfolioService.RemovePortfolioItemAsync(userId.Value, coinId);
             return Ok();
         }
@@ -67,7 +56,7 @@ namespace CryptoAPI.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
             {
-                return null;
+                return null; //throw exception ?
             }
             return userId;
         }

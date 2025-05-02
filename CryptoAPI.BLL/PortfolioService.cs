@@ -36,12 +36,12 @@ namespace CryptoAPI.BLL
             };
         }
 
-        public async Task AddPortfolioItemAsync(int userId, PortfolioItem portfolioItemDto)
+        public async Task AddPortfolioItemAsync(int userId, PortfolioItem portfolioItem)
         {
-            if (portfolioItemDto == null)
+            if (portfolioItem == null)
                 throw new NotFoundException("Item not found");
 
-            await _portfolioRepo.AddPortfolioItemAsync(userId, portfolioItemDto);
+            await _portfolioRepo.AddPortfolioItemAsync(userId, portfolioItem);
         }
 
         public async Task RemovePortfolioItemAsync(int userId, string coinId)

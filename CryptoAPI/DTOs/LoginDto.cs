@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoAPI.Core.DTOs
+namespace CryptoAPI.DTOs
 {
     public class LoginDto
     {

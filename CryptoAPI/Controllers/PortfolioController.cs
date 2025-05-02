@@ -1,4 +1,4 @@
-﻿using CryptoAPI.Core.DTOs;
+﻿using CryptoAPI.DTOs;
 using CryptoAPI.Core.Interfaces;
 using CryptoAPI.Core.Models;
 using Microsoft.AspNetCore.Authorization;

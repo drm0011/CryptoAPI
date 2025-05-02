@@ -9,13 +9,10 @@ namespace CryptoAPI.Core.Models
 {
     public class PortfolioItem
     {
-        [Required(ErrorMessage = "CoinId is required.")]
         public string CoinId { get; set; }
 
-        [Required(ErrorMessage = "CoinName is required.")]
         public string CoinName { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Amount must be a positive number.")]
         public decimal Amount { get; set; }
     }
 }

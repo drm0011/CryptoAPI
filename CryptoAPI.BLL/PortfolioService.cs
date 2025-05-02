@@ -25,15 +25,17 @@ namespace CryptoAPI.BLL
             if (portfolio == null)
                 throw new NotFoundException("Portfolio not found");
 
-            return new Portfolio
-            {
-                PortfolioItems = portfolio?.PortfolioItems.Select(pi => new PortfolioItem
-                {
-                    CoinId = pi.CoinId,
-                    CoinName = pi.CoinName,
-                    Amount = pi.Amount
-                }).ToList() ?? new List<PortfolioItem>()
-            };
+            //return new Portfolio
+            //{
+            //    PortfolioItems = portfolio?.PortfolioItems.Select(pi => new PortfolioItem
+            //    {
+            //        CoinId = pi.CoinId,
+            //        CoinName = pi.CoinName,
+            //        Amount = pi.Amount
+            //    }).ToList() ?? new List<PortfolioItem>()
+            //}; // unnecessary mapping?
+
+            return portfolio;
         }
 
         public async Task AddPortfolioItemAsync(int userId, PortfolioItem portfolioItem)

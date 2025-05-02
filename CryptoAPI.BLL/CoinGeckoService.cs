@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CryptoAPI.BLL
 {
-    public class CoinGeckoService:ICoinGeckoService
+    public class CoinGeckoService:ICoinGeckoService // add exceptions to this class?
     {
         private readonly HttpClient _httpClient;
         public CoinGeckoService(HttpClient httpClient)

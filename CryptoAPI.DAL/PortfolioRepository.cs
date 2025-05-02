@@ -50,7 +50,7 @@ namespace CryptoAPI.DAL
                 .Include(p => p.PortfolioItems)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            if (portfolioEntity == null) return;
+            if (portfolioEntity == null) return; // not found exception?
 
             var portfolioItemEntity = portfolioEntity.PortfolioItems
                 .FirstOrDefault(pi => pi.CoinId == coinId);

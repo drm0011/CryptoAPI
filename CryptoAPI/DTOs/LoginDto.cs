@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoAPI.Core.DTOs
+namespace CryptoAPI.DTOs
 {
-    public class UserDto
+    public class LoginDto
     {
-        [Required, MinLength(3), MaxLength(50)]
+        [Required]
         public string Username { get; set; } = string.Empty;
 
-        [Required, MinLength(6)]
+        [Required]
         public string Password { get; set; } = string.Empty;
     }
 }

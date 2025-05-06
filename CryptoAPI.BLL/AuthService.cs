@@ -1,5 +1,4 @@
-﻿using CryptoAPI.Core.DTOs;
-using CryptoAPI.Core.Interfaces;
+﻿using CryptoAPI.Core.Interfaces;
 using CryptoAPI.Core.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -24,22 +23,22 @@ namespace CryptoAPI.BLL
             _config = config;
         }
 
-        public async Task<string> RegisterAsync(UserDto userDto)
+        public async Task<string> RegisterAsync(User userRegister) 
         {
-            if (await _userRepo.GetByUsernameAsync(userDto.Username) != null)
+            if (await _userRepo.GetByUsernameAsync(userRegister.Username) != null)
                 throw new Exception("User already exists");
 
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-            var user = new User { Username = userDto.Username, Password = passwordHash };
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegister.Password);
+            var user = new User { Username = userRegister.Username, Password = passwordHash };
 
             await _userRepo.AddUserAsync(user);
             return GenerateJwtToken(user);
         }
 
-        public async Task<string> LoginAsync(LoginDto loginDto)
+        public async Task<string> LoginAsync(User loginUser)
         {
-            var user = await _userRepo.GetByUsernameAsync(loginDto.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+            var user = await _userRepo.GetByUsernameAsync(loginUser.Username);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginUser.Password, user.Password))
                 throw new Exception("Invalid username or password");
 
             return GenerateJwtToken(user);

@@ -1,4 +1,4 @@
-﻿using CryptoAPI.Core.DTOs;
+﻿using CryptoAPI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,8 @@ namespace CryptoAPI.Core.Interfaces
 {
     public interface IPortfolioService
     {
-        Task<PortfolioDto> GetPortfolioAsync(int userId);
-        Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto);
+        Task<Portfolio> GetPortfolioAsync(int userId);
+        Task AddPortfolioItemAsync(int userId, PortfolioItem portfolioItemDto); //change to domain model
         Task RemovePortfolioItemAsync(int userId, string coinId);
     }
 }

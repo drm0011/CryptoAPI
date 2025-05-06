@@ -1,5 +1,6 @@
-﻿using CryptoAPI.Core.DTOs;
-using CryptoAPI.Core.Interfaces;
+﻿using CryptoAPI.Core.Interfaces;
+using CryptoAPI.Core.Models;
+using CryptoAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,36 +18,38 @@ namespace CryptoAPI.BLL
             _portfolioRepo = portfolioRepo;
         }
 
-        public async Task<PortfolioDto> GetPortfolioAsync(int userId)
+        public async Task<Portfolio> GetPortfolioAsync(int userId)
         {
             var portfolio = await _portfolioRepo.GetPortfolioByUserIdAsync(userId);
-            return new PortfolioDto
-            {
-                PortfolioItems = portfolio?.PortfolioItems.Select(pi => new PortfolioItemDto
-                {
-                    CoinId = pi.CoinId,
-                    CoinName = pi.CoinName,
-                    Amount = pi.Amount
-                }).ToList() ?? new List<PortfolioItemDto>()
-            };
+
+            if (portfolio == null)
+                throw new NotFoundException("Portfolio not found");
+
+            //return new Portfolio
+            //{
+            //    PortfolioItems = portfolio?.PortfolioItems.Select(pi => new PortfolioItem
+            //    {
+            //        CoinId = pi.CoinId,
+            //        CoinName = pi.CoinName,
+            //        Amount = pi.Amount
+            //    }).ToList() ?? new List<PortfolioItem>()
+            //}; // unnecessary mapping?
+
+            return portfolio;
         }
 
-        public async Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto)
+        public async Task AddPortfolioItemAsync(int userId, PortfolioItem portfolioItem)
         {
-            if (portfolioItemDto == null)
-            {
-                return; //throw appropriate exception
-            } 
+            if (portfolioItem == null)
+                throw new NotFoundException("Item not found");
 
-            await _portfolioRepo.AddPortfolioItemAsync(userId, portfolioItemDto);
+            await _portfolioRepo.AddPortfolioItemAsync(userId, portfolioItem);
         }
 
         public async Task RemovePortfolioItemAsync(int userId, string coinId)
         {
             if (string.IsNullOrEmpty(coinId))
-            {
-                return; //throw appropriate exception
-            }
+                throw new NotFoundException("Coin not found");
 
             await _portfolioRepo.RemovePortfolioItemAsync(userId, coinId);
         }

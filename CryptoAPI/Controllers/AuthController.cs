@@ -1,5 +1,7 @@
-﻿using CryptoAPI.Core.DTOs;
+﻿using AutoMapper;
+using CryptoAPI.DTOs;
 using CryptoAPI.Core.Interfaces;
+using CryptoAPI.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoAPI.Controllers
@@ -8,7 +10,13 @@ namespace CryptoAPI.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService) => _authService = authService;
+        private readonly IMapper _mapper;
+
+        public AuthController(IAuthService authService, IMapper mapper)
+        {
+            _authService = authService;
+            _mapper = mapper;
+        }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
@@ -16,7 +24,9 @@ namespace CryptoAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var token = await _authService.RegisterAsync(userDto);
+            var user = _mapper.Map<User>(userDto);
+
+            var token = await _authService.RegisterAsync(user);
             return Ok(new { token });
         }
 
@@ -26,7 +36,9 @@ namespace CryptoAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var token = await _authService.LoginAsync(loginDto);
+            var user = _mapper.Map<User>(loginDto);
+
+            var token = await _authService.LoginAsync(user);
             return Ok(new { token });
         }
     }

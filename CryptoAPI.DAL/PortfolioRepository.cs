@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using CryptoAPI.Core.DTOs;
 using CryptoAPI.Core.Interfaces;
 using CryptoAPI.DAL.Entities;
+using CryptoAPI.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,16 +19,16 @@ namespace CryptoAPI.DAL
             _mapper = mapper;
         }
 
-        public async Task<PortfolioDto> GetPortfolioByUserIdAsync(int userId)
+        public async Task<Core.Models.Portfolio> GetPortfolioByUserIdAsync(int userId) //null checks here instead of service? test exceptions in dal
         {
             var portfolioEntity = await _context.Portfolio
                 .Include(p => p.PortfolioItems)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            return _mapper.Map<PortfolioDto>(portfolioEntity);
+            return _mapper.Map<Core.Models.Portfolio>(portfolioEntity);
         }
 
-        public async Task AddPortfolioItemAsync(int userId, PortfolioItemDto portfolioItemDto)
+        public async Task AddPortfolioItemAsync(int userId, Core.Models.PortfolioItem portfolioItem) 
         {
             var portfolioEntity = await _context.Portfolio
                 .Include(p => p.PortfolioItems)
@@ -40,7 +40,7 @@ namespace CryptoAPI.DAL
                 await _context.Portfolio.AddAsync(portfolioEntity);
             }
 
-            var portfolioItemEntity = _mapper.Map<PortfolioItem>(portfolioItemDto);
+            var portfolioItemEntity = _mapper.Map<PortfolioItem>(portfolioItem);
             portfolioEntity.PortfolioItems.Add(portfolioItemEntity);
             await _context.SaveChangesAsync();
         }
@@ -51,7 +51,7 @@ namespace CryptoAPI.DAL
                 .Include(p => p.PortfolioItems)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            if (portfolioEntity == null) return;
+            if (portfolioEntity == null) throw new NotFoundException("Portfolio not found for user.");
 
             var portfolioItemEntity = portfolioEntity.PortfolioItems
                 .FirstOrDefault(pi => pi.CoinId == coinId);

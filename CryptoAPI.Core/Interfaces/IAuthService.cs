@@ -1,4 +1,4 @@
-﻿using CryptoAPI.Core.DTOs;
+﻿using CryptoAPI.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace CryptoAPI.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> RegisterAsync(UserDto userDto);
-        Task<string> LoginAsync(LoginDto loginDto);
+        Task<string> RegisterAsync(User user); //change to domainmodel
+        Task<string> LoginAsync(User user);
     }
 }

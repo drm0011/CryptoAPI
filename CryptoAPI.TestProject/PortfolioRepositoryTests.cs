@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CryptoAPI.Core.DTOs;
 using CryptoAPI.DAL;
 using CryptoAPI.DAL.Entities;
 using Microsoft.EntityFrameworkCore;

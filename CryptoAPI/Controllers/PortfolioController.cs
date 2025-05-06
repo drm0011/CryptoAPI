@@ -63,6 +63,7 @@ namespace CryptoAPI.Controllers
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
             {
                 return null; //throw exception ?
+                //throw new UnauthorizedAccessException("User ID claim is missing or invalid.");
             }
             return userId;
         }

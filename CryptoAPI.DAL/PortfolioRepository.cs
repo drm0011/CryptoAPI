@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CryptoAPI.Core.Interfaces;
 using CryptoAPI.DAL.Entities;
+using CryptoAPI.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace CryptoAPI.DAL
             _mapper = mapper;
         }
 
-        public async Task<Core.Models.Portfolio> GetPortfolioByUserIdAsync(int userId)
+        public async Task<Core.Models.Portfolio> GetPortfolioByUserIdAsync(int userId) //null checks here instead of service? test exceptions in dal
         {
             var portfolioEntity = await _context.Portfolio
                 .Include(p => p.PortfolioItems)
@@ -50,7 +51,7 @@ namespace CryptoAPI.DAL
                 .Include(p => p.PortfolioItems)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            if (portfolioEntity == null) return; // not found exception?
+            if (portfolioEntity == null) throw new NotFoundException("Portfolio not found for user.");
 
             var portfolioItemEntity = portfolioEntity.PortfolioItems
                 .FirstOrDefault(pi => pi.CoinId == coinId);

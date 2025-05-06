@@ -23,7 +23,7 @@ namespace CryptoAPI.BLL
             _config = config;
         }
 
-        public async Task<string> RegisterAsync(User userRegister) //change this
+        public async Task<string> RegisterAsync(User userRegister) 
         {
             if (await _userRepo.GetByUsernameAsync(userRegister.Username) != null)
                 throw new Exception("User already exists");

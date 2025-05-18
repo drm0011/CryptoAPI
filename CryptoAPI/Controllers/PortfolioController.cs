@@ -62,8 +62,8 @@ namespace CryptoAPI.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
             {
-                return null; //throw exception ?
-                //throw new UnauthorizedAccessException("User ID claim is missing or invalid.");
+                //return null; //throw exception ?
+                throw new UnauthorizedAccessException("User ID claim is missing or invalid.");
             }
             return userId;
         }

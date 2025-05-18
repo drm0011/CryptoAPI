@@ -34,7 +34,7 @@ namespace CryptoAPI.TestProject
         }
 
         [TestMethod]
-        public async Task GetPortfolioByUserIdAsync_ReturnsNull_WhenPortfolioDoesNotExist()
+        public async Task GetPortfolioByUserIdAsync_ReturnsNull_WhenPortfolioDoesNotExist() //change tests to work with current setup
         {
             var result = await _repository.GetPortfolioByUserIdAsync(999);
 

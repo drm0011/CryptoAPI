@@ -26,7 +26,6 @@ namespace CryptoAPI.TestProject
         [TestMethod]
         public async Task GetPortfolioAsync_ReturnsPortfolio_WhenUserHasPortfolio()
         {
-            // Arrange
             var userId = 1;
             var portfolioDto = new PortfolioDto
             {
@@ -40,10 +39,8 @@ namespace CryptoAPI.TestProject
             _mockPortfolioRepo.Setup(x => x.GetPortfolioByUserIdAsync(userId))
                 .ReturnsAsync(portfolioDto);
 
-            // Act
             var result = await _portfolioService.GetPortfolioAsync(userId);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.PortfolioItems.Count);
             Assert.AreEqual("bitcoin", result.PortfolioItems.First().CoinId);
@@ -54,7 +51,6 @@ namespace CryptoAPI.TestProject
         [TestMethod]
         public async Task GetPortfolioAsync_ReturnsEmptyPortfolio_WhenUserHasNoPortfolio()
         {
-            // Arrange
             var userId = 1;
             var emptyPortfolio = new PortfolioDto
             {
@@ -64,10 +60,8 @@ namespace CryptoAPI.TestProject
             _mockPortfolioRepo.Setup(x => x.GetPortfolioByUserIdAsync(userId))
                 .ReturnsAsync(emptyPortfolio);
 
-            // Act
             var result = await _portfolioService.GetPortfolioAsync(userId);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.PortfolioItems.Count);
             _mockPortfolioRepo.Verify(x => x.GetPortfolioByUserIdAsync(userId), Times.Once);
@@ -76,7 +70,6 @@ namespace CryptoAPI.TestProject
         [TestMethod]
         public async Task AddPortfolioItemAsync_CallsRepository_WithCorrectParameters()
         {
-            // Arrange
             var userId = 1;
             var portfolioItemDto = new PortfolioItemDto
             {
@@ -85,24 +78,19 @@ namespace CryptoAPI.TestProject
                 Amount = 0.5m
             };
 
-            // Act
             await _portfolioService.AddPortfolioItemAsync(userId, portfolioItemDto);
 
-            // Assert
             _mockPortfolioRepo.Verify(x => x.AddPortfolioItemAsync(userId, portfolioItemDto), Times.Once);
         }
 
         [TestMethod]
         public async Task RemovePortfolioItemAsync_CallsRepository_WithCorrectParameters()
         {
-            // Arrange
             var userId = 1;
             var coinId = "bitcoin";
 
-            // Act
             await _portfolioService.RemovePortfolioItemAsync(userId, coinId);
 
-            // Assert
             _mockPortfolioRepo.Verify(x => x.RemovePortfolioItemAsync(userId, coinId), Times.Once);
         }
 

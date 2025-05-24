@@ -15,11 +15,13 @@ namespace CryptoAPI.BLL
     public class AuthService:IAuthService
     {
         private readonly IUserRepository _userRepo;
+        private readonly IPortfolioRepository _portfolioRepo; // does this belong here?
         private readonly IConfiguration _config;
 
-        public AuthService(IUserRepository userRepo, IConfiguration config)
+        public AuthService(IUserRepository userRepo, IPortfolioRepository portfolioRepo, IConfiguration config)
         {
             _userRepo = userRepo;
+            _portfolioRepo = portfolioRepo;
             _config = config;
         }
 
@@ -32,7 +34,12 @@ namespace CryptoAPI.BLL
             var user = new User { Username = userRegister.Username, Password = passwordHash };
 
             await _userRepo.AddUserAsync(user);
-            return GenerateJwtToken(user);
+
+            var savedUser = await _userRepo.GetByUsernameAsync(user.Username);
+
+            await _portfolioRepo.CreatePortfolioAsync(savedUser.Id);
+
+            return GenerateJwtToken(savedUser);
         }
 
         public async Task<string> LoginAsync(User loginUser)

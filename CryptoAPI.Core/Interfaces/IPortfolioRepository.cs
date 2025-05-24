@@ -12,5 +12,6 @@ namespace CryptoAPI.Core.Interfaces
         Task<Portfolio> GetPortfolioByUserIdAsync(int userId);
         Task AddPortfolioItemAsync(int userId, PortfolioItem portfolioItemDto);
         Task RemovePortfolioItemAsync(int userId, string coinId);
+        Task CreatePortfolioAsync(int userId); 
     }
 }

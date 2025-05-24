@@ -19,6 +19,17 @@ namespace CryptoAPI.DAL
             _mapper = mapper;
         }
 
+        public async Task CreatePortfolioAsync(int userId) 
+        {
+            var exists = await _context.Portfolio.AnyAsync(p => p.UserId == userId);
+            if (!exists)
+            {
+                var newPortfolio = new Portfolio { UserId = userId };
+                await _context.Portfolio.AddAsync(newPortfolio);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<Core.Models.Portfolio> GetPortfolioByUserIdAsync(int userId) //null checks here instead of service? test exceptions in dal
         {
             var portfolioEntity = await _context.Portfolio
@@ -34,14 +45,14 @@ namespace CryptoAPI.DAL
                 .Include(p => p.PortfolioItems)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
 
-            if (portfolioEntity == null)
-            {
-                portfolioEntity = new Portfolio { UserId = userId };
-                await _context.Portfolio.AddAsync(portfolioEntity);
-            }
+            //if (portfolioEntity == null)
+            //{
+            //    portfolioEntity = new Portfolio { UserId = userId };
+            //    await _context.Portfolio.AddAsync(portfolioEntity);
+            //}
 
             var portfolioItemEntity = _mapper.Map<PortfolioItem>(portfolioItem);
-            portfolioEntity.PortfolioItems.Add(portfolioItemEntity);
+            portfolioEntity.PortfolioItems.Add(portfolioItemEntity); //may be null?
             await _context.SaveChangesAsync();
         }
 

@@ -57,6 +57,25 @@ namespace CryptoAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("note")]
+        [Authorize]
+        public async Task<IActionResult> AddNote([FromBody] NoteRequest request)
+        {
+            var userId = GetCurrentUserId();
+            await _portfolioService.AddOrUpdateNoteAsync(userId.Value, request.CoinId, request.Note); // .Value?
+            return Ok();
+        }
+
+        [HttpGet("notes")]
+        [Authorize]
+        public async Task<IActionResult> GetNotes()
+        {
+            var userId = GetCurrentUserId();
+            var notes = await _portfolioService.GetNotesByUserAsync(userId.Value);
+            return Ok(notes);
+        }
+
+
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);

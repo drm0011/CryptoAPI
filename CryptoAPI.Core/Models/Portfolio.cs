@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptoAPI.Core.Models
 {
-    public class Portfolio
+    public class Portfolio // not being used?
     {
         public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
     }

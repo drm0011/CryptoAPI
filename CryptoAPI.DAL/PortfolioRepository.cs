@@ -73,5 +73,37 @@ namespace CryptoAPI.DAL
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task AddOrUpdateNoteAsync(int userId, string coinId, string note)
+        {
+            var existing = await _context.PortfolioNotes
+                .FirstOrDefaultAsync(n => n.UserId == userId && n.CoinId == coinId);
+
+            if (existing != null)
+            {
+                existing.Note = note;
+            }
+            else
+            {
+                await _context.PortfolioNotes.AddAsync(new PortfolioNote
+                {
+                    UserId = userId,
+                    CoinId = coinId,
+                    Note = note
+                });
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Core.Models.PortfolioNote>> GetNotesByUserAsync(int userId)
+        {
+            var notesEntity = await _context.PortfolioNotes
+                .Where(n => n.UserId == userId)
+                .ToListAsync();
+
+            return _mapper.Map<List<Core.Models.PortfolioNote>>(notesEntity);
+        }
+
     }
 }

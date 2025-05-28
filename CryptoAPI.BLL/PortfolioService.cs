@@ -53,5 +53,15 @@ namespace CryptoAPI.BLL
 
             await _portfolioRepo.RemovePortfolioItemAsync(userId, coinId);
         }
+
+        public Task<List<PortfolioNote>> GetNotesByUserAsync(int userId)
+        {
+            return _portfolioRepo.GetNotesByUserAsync(userId);
+        }
+
+        public Task AddOrUpdateNoteAsync(int userId, string coinId, string note)
+        {
+            return _portfolioRepo.AddOrUpdateNoteAsync(userId, coinId, note);
+        }
     }
 }

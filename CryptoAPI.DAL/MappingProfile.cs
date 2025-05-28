@@ -14,6 +14,8 @@ namespace CryptoAPI.DAL
             CreateMap<Entities.PortfolioItem, Core.Models.PortfolioItem>();
             CreateMap<Entities.Portfolio, Core.Models.Portfolio>();
             CreateMap<Core.Models.Portfolio, Entities.Portfolio>();
+            CreateMap<Core.Models.PortfolioNote, Entities.PortfolioNote>();
+            CreateMap<Entities.PortfolioNote, Core.Models.PortfolioNote>();
         }
     }
 }

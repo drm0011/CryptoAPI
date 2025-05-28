@@ -17,5 +17,7 @@ namespace CryptoAPI.DAL
         public DbSet<User> Users { get; set; }
         public DbSet<Portfolio> Portfolio { get; set; }
         public DbSet<PortfolioItem> PortfolioItem { get; set; }
+        public DbSet<PortfolioNote> PortfolioNotes { get; set; }
+
     }
 }

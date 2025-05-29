@@ -9,5 +9,7 @@ namespace CryptoAPI.Core.Interfaces
     public interface ICoinGeckoService
     {
         Task<string> GetCoinMarketDataAsync(string vsCurrency, int perPage, int page);
+        Task<string> GetCoinInfoAsync(string id);
+        Task<string> GetMarketChartAsync(string id, string vsCurrency, int days);
     }
 }

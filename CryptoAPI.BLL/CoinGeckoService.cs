@@ -33,5 +33,38 @@ namespace CryptoAPI.BLL
                 throw new HttpRequestException($"Request failed with status code {response.StatusCode}: {response.ReasonPhrase}");
             }
         }
+
+        public async Task<string> GetCoinInfoAsync(string id)
+        {
+            var url = $"https://api.coingecko.com/api/v3/coins/{id}";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("User-Agent", "CryptoAPI/1.0");
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            throw new HttpRequestException($"Failed to fetch coin info: {response.StatusCode} {response.ReasonPhrase}");
+        }
+
+        public async Task<string> GetMarketChartAsync(string id, string vsCurrency, int days)
+        {
+            var url = $"https://api.coingecko.com/api/v3/coins/{id}/market_chart?vs_currency={vsCurrency}&days={days}";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("User-Agent", "CryptoAPI/1.0");
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            throw new HttpRequestException($"Failed to fetch market chart: {response.StatusCode} {response.ReasonPhrase}");
+        }
+
     }
 }

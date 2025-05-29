@@ -1,20 +1,23 @@
 ﻿using CryptoAPI.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CryptoAPI
 {
-    public class CommentsHub:Hub
+    [Authorize]
+    public class CommentsHub : Hub
     {
-        public async Task SendComment(int userId, string comment)
+        public async Task SendComment(int userId, string coinId, string note)
         {
-            var portfolioComment = new PortfolioComment
+            var portfolioNote = new PortfolioNote
             {
                 UserId = userId,
-                Comment = comment
+                CoinId = coinId,
+                Note = note
             };
 
-            //broadcast to all clients 
-            await Clients.All.SendAsync("ReceiveComment", portfolioComment);
+            //broadcast the note to all clients or limit this to groups based on coinId?
+            await Clients.All.SendAsync("ReceiveComment", portfolioNote);
         }
     }
 }

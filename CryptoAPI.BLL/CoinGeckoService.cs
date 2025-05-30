@@ -1,4 +1,6 @@
 ﻿using CryptoAPI.Core.Interfaces;
+using CryptoAPI.Core.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,11 @@ namespace CryptoAPI.BLL
     public class CoinGeckoService:ICoinGeckoService // add exceptions to this class?
     {
         private readonly HttpClient _httpClient;
-        public CoinGeckoService(HttpClient httpClient)
+        private readonly string _apiKey;
+        public CoinGeckoService(HttpClient httpClient, IOptions<CoinGeckoOptions> options)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _apiKey = options.Value.ApiKey;
         }
 
         public async Task<string> GetCoinMarketDataAsync(string vsCurrency, int perPage, int page)
@@ -21,6 +25,7 @@ namespace CryptoAPI.BLL
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "CryptoAPI/1.0");
+            request.Headers.Add("x-cg-demo-api-key", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
 
@@ -39,6 +44,7 @@ namespace CryptoAPI.BLL
             var url = $"https://api.coingecko.com/api/v3/coins/{id}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "CryptoAPI/1.0");
+            request.Headers.Add("x-cg-demo-api-key", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
 
@@ -55,6 +61,7 @@ namespace CryptoAPI.BLL
             var url = $"https://api.coingecko.com/api/v3/coins/{id}/market_chart?vs_currency={vsCurrency}&days={days}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "CryptoAPI/1.0");
+            request.Headers.Add("x-cg-demo-api-key", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
 

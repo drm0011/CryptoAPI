@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CryptoAPI.Core.Models
 {
-    public class Portfolio // not being used?
+    public class CoinGeckoOptions
     {
-        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
+        public string ApiKey { get; set; }
     }
 }

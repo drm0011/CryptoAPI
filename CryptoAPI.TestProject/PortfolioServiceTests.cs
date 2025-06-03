@@ -1,113 +1,110 @@
-﻿//using CryptoAPI.BLL;
-//using CryptoAPI.Core.DTOs;
-//using CryptoAPI.Core.Interfaces;
-//using CryptoAPI.DAL.Entities;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Moq;
-//using System;
-//using System.Collections.Generic;
-//using System.Threading.Tasks;
+﻿
+using CryptoAPI.BLL;
+using CryptoAPI.Core.Interfaces;
+using CryptoAPI.Core.Models;
+using CryptoAPI.Exceptions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-//namespace CryptoAPI.TestProject
-//{
-//    [TestClass]
-//    public class PortfolioServiceTests
-//    {
-//        private Mock<IPortfolioRepository> _mockPortfolioRepo;
-//        private PortfolioService _portfolioService;
+namespace CryptoAPI.TestProject
+{
+    [TestClass]
+    public class PortfolioServiceTests
+    {
+        private Mock<IPortfolioRepository> _mockRepo;
+        private PortfolioService _service;
 
-//        [TestInitialize]
-//        public void Setup()
-//        {
-//            _mockPortfolioRepo = new Mock<IPortfolioRepository>();
-//            _portfolioService = new PortfolioService(_mockPortfolioRepo.Object);
-//        }
+        [TestInitialize]
+        public void Setup()
+        {
+            _mockRepo = new Mock<IPortfolioRepository>();
+            _service = new PortfolioService(_mockRepo.Object);
+        }
 
-//        [TestMethod]
-//        public async Task GetPortfolioAsync_ReturnsPortfolio_WhenUserHasPortfolio()
-//        {
-//            var userId = 1;
-//            var portfolioDto = new PortfolioDto
-//            {
-//                PortfolioItems = new List<PortfolioItemDto>
-//                {
-//                    new PortfolioItemDto { CoinId = "bitcoin", CoinName = "Bitcoin", Amount = 0.5m },
-//                    new PortfolioItemDto { CoinId = "ethereum", CoinName = "Ethereum", Amount = 2m }
-//                }
-//            };
+        [TestMethod]
+        public async Task GetPortfolioAsync_ReturnsPortfolio_WhenExists()
+        {
+            var userId = 1;
+            var portfolio = new Portfolio
+            {
+                PortfolioItems = new List<PortfolioItem>
+                {
+                    new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin", Amount = 1 }
+                }
+            };
 
-//            _mockPortfolioRepo.Setup(x => x.GetPortfolioByUserIdAsync(userId))
-//                .ReturnsAsync(portfolioDto);
+            _mockRepo.Setup(r => r.GetPortfolioByUserIdAsync(userId)).ReturnsAsync(portfolio);
 
-//            var result = await _portfolioService.GetPortfolioAsync(userId);
+            var result = await _service.GetPortfolioAsync(userId);
 
-//            Assert.IsNotNull(result);
-//            Assert.AreEqual(2, result.PortfolioItems.Count);
-//            Assert.AreEqual("bitcoin", result.PortfolioItems.First().CoinId);
-//            Assert.AreEqual(0.5m, result.PortfolioItems.First().Amount);
-//            _mockPortfolioRepo.Verify(x => x.GetPortfolioByUserIdAsync(userId), Times.Once);
-//        }
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.PortfolioItems.Count);
+            Assert.AreEqual("btc", result.PortfolioItems.First().CoinId);
+        }
 
-//        [TestMethod]
-//        public async Task GetPortfolioAsync_ReturnsEmptyPortfolio_WhenUserHasNoPortfolio()
-//        {
-//            var userId = 1;
-//            var emptyPortfolio = new PortfolioDto
-//            {
-//                PortfolioItems = new List<PortfolioItemDto>()
-//            };
+        [TestMethod]
+        public async Task GetPortfolioAsync_Throws_WhenNotFound()
+        {
+            _mockRepo.Setup(r => r.GetPortfolioByUserIdAsync(It.IsAny<int>())).ReturnsAsync((Portfolio)null);
 
-//            _mockPortfolioRepo.Setup(x => x.GetPortfolioByUserIdAsync(userId))
-//                .ReturnsAsync(emptyPortfolio);
+            await Assert.ThrowsExceptionAsync<NotFoundException>(() => _service.GetPortfolioAsync(1));
+        }
 
-//            var result = await _portfolioService.GetPortfolioAsync(userId);
+        [TestMethod]
+        public async Task AddPortfolioItemAsync_CallsRepo_WhenItemIsValid()
+        {
+            var item = new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin", Amount = 1 };
 
-//            Assert.IsNotNull(result);
-//            Assert.AreEqual(0, result.PortfolioItems.Count);
-//            _mockPortfolioRepo.Verify(x => x.GetPortfolioByUserIdAsync(userId), Times.Once);
-//        }
+            await _service.AddPortfolioItemAsync(1, item);
 
-//        [TestMethod]
-//        public async Task AddPortfolioItemAsync_CallsRepository_WithCorrectParameters()
-//        {
-//            var userId = 1;
-//            var portfolioItemDto = new PortfolioItemDto
-//            {
-//                CoinId = "bitcoin",
-//                CoinName = "Bitcoin",
-//                Amount = 0.5m
-//            };
+            _mockRepo.Verify(r => r.AddPortfolioItemAsync(1, item), Times.Once);
+        }
 
-//            await _portfolioService.AddPortfolioItemAsync(userId, portfolioItemDto);
+        [TestMethod]
+        public async Task AddPortfolioItemAsync_Throws_WhenItemIsNull()
+        {
+            await Assert.ThrowsExceptionAsync<NotFoundException>(() => _service.AddPortfolioItemAsync(1, null));
+        }
 
-//            _mockPortfolioRepo.Verify(x => x.AddPortfolioItemAsync(userId, portfolioItemDto), Times.Once);
-//        }
+        [TestMethod]
+        public async Task RemovePortfolioItemAsync_CallsRepo_WhenCoinIdIsValid()
+        {
+            await _service.RemovePortfolioItemAsync(1, "btc");
 
-//        [TestMethod]
-//        public async Task RemovePortfolioItemAsync_CallsRepository_WithCorrectParameters()
-//        {
-//            var userId = 1;
-//            var coinId = "bitcoin";
+            _mockRepo.Verify(r => r.RemovePortfolioItemAsync(1, "btc"), Times.Once);
+        }
 
-//            await _portfolioService.RemovePortfolioItemAsync(userId, coinId);
+        [TestMethod]
+        public async Task RemovePortfolioItemAsync_Throws_WhenCoinIdIsNull()
+        {
+            await Assert.ThrowsExceptionAsync<NotFoundException>(() => _service.RemovePortfolioItemAsync(1, null));
+        }
 
-//            _mockPortfolioRepo.Verify(x => x.RemovePortfolioItemAsync(userId, coinId), Times.Once);
-//        }
+        [TestMethod]
+        public async Task GetNotesByUserAsync_ReturnsNotes()
+        {
+            var notes = new List<PortfolioNote>
+            {
+                new PortfolioNote { CoinId = "btc", Note = "Note 1" }
+            };
 
-//        [TestMethod]
-//        public async Task AddPortfolioItemAsync_DoesNotThrow_WhenPortfolioItemDtoIsNull()
-//        {
-//            // validation happens in controller, service should handle null
-//            await _portfolioService.AddPortfolioItemAsync(1, null);
-//            // verify the repo wasnt called
-//            _mockPortfolioRepo.Verify(x => x.AddPortfolioItemAsync(It.IsAny<int>(), It.IsAny<PortfolioItemDto>()), Times.Never);
-//        }
+            _mockRepo.Setup(r => r.GetNotesByUserAsync(1)).ReturnsAsync(notes);
 
-//        [TestMethod]
-//        public async Task RemovePortfolioItemAsync_DoesNotThrow_WhenCoinIdIsNullOrEmpty()
-//        {
-//            await _portfolioService.RemovePortfolioItemAsync(1, string.Empty);
-//            _mockPortfolioRepo.Verify(x => x.RemovePortfolioItemAsync(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
-//        }
-//    }
-//}
+            var result = await _service.GetNotesByUserAsync(1);
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("Note 1", result.First().Note);
+        }
+
+        [TestMethod]
+        public async Task AddOrUpdateNoteAsync_CallsRepo()
+        {
+            await _service.AddOrUpdateNoteAsync(1, "btc", "Note");
+
+            _mockRepo.Verify(r => r.AddOrUpdateNoteAsync(1, "btc", "Note"), Times.Once);
+        }
+    }
+}

@@ -1,0 +1,53 @@
+name: CI Build, Test, and Codacy Coverage
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-test-coverage:
+    name: Build, Test, and Codacy Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Solution
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run Tests with Coverage
+        run: |
+          dotnet test CryptoAPI.TestProject/CryptoAPI.TestProject.csproj --configuration Release \
+            --collect:"XPlat Code Coverage"
+
+      - name: Locate Coverage File
+        id: locate_coverage
+        run: |
+          echo "COVERAGE_FILE=$(find . -name 'coverage.cobertura.xml' | head -n 1)" >> $GITHUB_ENV
+
+      - name: Show Coverage File Path
+        run: |
+          echo "Found coverage file at: ${{ env.COVERAGE_FILE }}"
+
+      - name: Download Codacy Coverage Reporter
+        run: |
+          curl -Ls https://github.com/codacy/codacy-coverage-reporter/releases/latest/download/codacy-coverage-reporter-linux \
+            -o codacy-coverage-reporter && chmod +x codacy-coverage-reporter
+
+      - name: Upload Coverage to Codacy
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: ./codacy-coverage-reporter report -l CSharp -r "${{ env.COVERAGE_FILE }}"

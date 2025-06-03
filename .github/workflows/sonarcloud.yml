@@ -31,9 +31,15 @@ jobs:
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Run Tests with Coverlet (OpenCover)
+      - name: Run Unit Tests with Coverlet Coverage
         run: |
-          dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./TestResults/
+          dotnet test CryptoAPI.TestProject/CryptoAPI.TestProject.csproj \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=opencover \
+            /p:CoverletOutput=./TestResults/coverage.opencover.xml
+
+      - name: Print Coverage File Path (Debug)
+        run: find . -name 'coverage.opencover.xml'
 
       - name: Run SonarCloud Analysis
         env:

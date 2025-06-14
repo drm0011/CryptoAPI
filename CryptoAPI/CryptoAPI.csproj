@@ -25,6 +25,7 @@
     <ProjectReference Include="..\CryptoAPI.BLL\CryptoAPI.BLL.csproj" />
     <ProjectReference Include="..\CryptoAPI.Core\CryptoAPI.Core.csproj" />
     <ProjectReference Include="..\CryptoAPI.DAL\CryptoAPI.DAL.csproj" />
+    <ProjectReference Include="..\CryptoAPI.ExternalAPI\CryptoAPI.ExternalAPI.csproj" />
   </ItemGroup>
 
 </Project>

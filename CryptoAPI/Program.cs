@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using CryptoAPI;
 using CryptoAPI.Core.Models;
+using CryptoAPI.ExternalAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 

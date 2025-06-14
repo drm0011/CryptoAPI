@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoAPI.BLL
+namespace CryptoAPI.ExternalAPI
 {
     public class CoinGecko:ICoinGeckoService // add exceptions to this class?
     {

@@ -65,5 +65,6 @@ namespace CryptoAPI.TestProject
             Assert.IsNotNull(userInDb);
             Assert.AreEqual("newuser", userInDb.Username);
         }
+
     }
 }

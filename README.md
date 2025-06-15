@@ -166,4 +166,4 @@ jobs:
 
 ## Conclusion
 
-This QA plan illustrates the comprehensive testing approach used in the CryptoAPI project. With unit tests ensuring logic correctness, integration tests validating persistence behavior, and CI/CD workflows providing automation and code quality feedback, CryptoAPI is structured for stability and long-term maintainability.
+This QA plan showcases my approach to testing my CryptoAPI project with the goal of ensuring reliability, code quality, and functionality. By having implemented the CI/CD pipeline any changes made and pushed to the project will be tested and feedback will be provided to showcase the effect of the new code.

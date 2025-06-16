@@ -10,12 +10,9 @@ namespace CryptoAPI.DAL
         public MappingProfile()
         {
             CreateMap<Core.Models.User, DAL.Entities.User>().ReverseMap();
-            CreateMap<Core.Models.PortfolioItem, Entities.PortfolioItem>();
-            CreateMap<Entities.PortfolioItem, Core.Models.PortfolioItem>();
-            CreateMap<Entities.Portfolio, Core.Models.Portfolio>();
-            CreateMap<Core.Models.Portfolio, Entities.Portfolio>();
-            CreateMap<Core.Models.PortfolioNote, Entities.PortfolioNote>();
-            CreateMap<Entities.PortfolioNote, Core.Models.PortfolioNote>();
+            CreateMap<Core.Models.PortfolioItem, Entities.PortfolioItem>().ReverseMap();
+            CreateMap<Entities.Portfolio, Core.Models.Portfolio>().ReverseMap();
+            CreateMap<Core.Models.PortfolioNote, Entities.PortfolioNote>().ReverseMap();
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using CryptoAPI;
 using CryptoAPI.Core.Models;
+using CryptoAPI.ExternalAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ builder.Services.AddDbContext<CryptoAPIContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
-builder.Services.AddHttpClient<ICoinGeckoService, CoinGeckoService>();
+builder.Services.AddHttpClient<ICoinGeckoService, CoinGecko>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();

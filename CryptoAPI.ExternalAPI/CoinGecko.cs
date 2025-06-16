@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoAPI.BLL
+namespace CryptoAPI.ExternalAPI
 {
-    public class CoinGeckoService:ICoinGeckoService // add exceptions to this class?
+    public class CoinGecko:ICoinGeckoService // add exceptions to this class?
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
-        public CoinGeckoService(HttpClient httpClient, IOptions<CoinGeckoOptions> options)
+        public CoinGecko(HttpClient httpClient, IOptions<CoinGeckoOptions> options)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _apiKey = options.Value.ApiKey;

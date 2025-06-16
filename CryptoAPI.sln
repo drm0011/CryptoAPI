@@ -3,18 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAPI", "CryptoAPI\CryptoAPI.csproj", "{67B5F031-5E6D-45B4-9F0A-43E68BAC9A0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoAPI", "CryptoAPI\CryptoAPI.csproj", "{67B5F031-5E6D-45B4-9F0A-43E68BAC9A0E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DDB74B0D-212B-49BC-A40E-EF410BD1071B} = {DDB74B0D-212B-49BC-A40E-EF410BD1071B}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAPI.DAL", "CryptoAPI.DAL\CryptoAPI.DAL.csproj", "{DDB74B0D-212B-49BC-A40E-EF410BD1071B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoAPI.DAL", "CryptoAPI.DAL\CryptoAPI.DAL.csproj", "{DDB74B0D-212B-49BC-A40E-EF410BD1071B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAPI.BLL", "CryptoAPI.BLL\CryptoAPI.BLL.csproj", "{379C3DFF-ED68-4D8F-A1A9-C00B08A2B01A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoAPI.BLL", "CryptoAPI.BLL\CryptoAPI.BLL.csproj", "{379C3DFF-ED68-4D8F-A1A9-C00B08A2B01A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAPI.Core", "CryptoAPI.Core\CryptoAPI.Core.csproj", "{72A1E5E9-7FB1-4D40-BBBD-7EB033CAC698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoAPI.Core", "CryptoAPI.Core\CryptoAPI.Core.csproj", "{72A1E5E9-7FB1-4D40-BBBD-7EB033CAC698}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAPI.TestProject", "CryptoAPI.TestProject\CryptoAPI.TestProject.csproj", "{45012EBA-65A2-449F-9E88-DD9696E6EB4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoAPI.TestProject", "CryptoAPI.TestProject\CryptoAPI.TestProject.csproj", "{45012EBA-65A2-449F-9E88-DD9696E6EB4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAPI.ExternalAPI", "CryptoAPI.ExternalAPI\CryptoAPI.ExternalAPI.csproj", "{99EEF1C5-EB26-431F-87A1-2C4D7304B529}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{45012EBA-65A2-449F-9E88-DD9696E6EB4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45012EBA-65A2-449F-9E88-DD9696E6EB4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45012EBA-65A2-449F-9E88-DD9696E6EB4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99EEF1C5-EB26-431F-87A1-2C4D7304B529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99EEF1C5-EB26-431F-87A1-2C4D7304B529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99EEF1C5-EB26-431F-87A1-2C4D7304B529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99EEF1C5-EB26-431F-87A1-2C4D7304B529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

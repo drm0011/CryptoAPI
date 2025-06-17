@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    image: rdk011/crypto-backend-image:latest
+    container_name: crypto-backend
+    restart: always
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=CryptoAppDb;User Id=sa;Password=StrongPassword123!;Encrypt=False;TrustServerCertificate=True
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --label-enable --interval 30 --cleanup

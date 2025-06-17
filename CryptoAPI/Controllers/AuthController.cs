@@ -39,7 +39,7 @@ namespace CryptoAPI.Controllers
             var user = _mapper.Map<User>(loginDto);
 
             var token = await _authService.LoginAsync(user);
-            return Ok(new { token });
+            return Ok(new { token, message ="watchtower success", version="1.0.0" });
         }
     }
 }

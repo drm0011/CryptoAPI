@@ -22,10 +22,13 @@ namespace CryptoAPI.DAL
         {
             base.OnModelCreating(modelBuilder);
 
-            //unique note per user + coin
             modelBuilder.Entity<PortfolioNote>()
                 .HasIndex(p => new { p.UserId, p.CoinId })
                 .IsUnique();
+
+            modelBuilder.Entity<PortfolioItem>()
+                .HasIndex(p => new { p.PortfolioId, p.CoinId })
+                .IsUnique(); 
         }
     }
 }

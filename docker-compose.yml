@@ -4,12 +4,16 @@ services:
   backend:
     image: rdk011/crypto-backend-image:latest
     container_name: crypto-backend
-    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=CryptoAppDb;User Id=sa;Password=StrongPassword123!;Encrypt=False;TrustServerCertificate=True
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     labels:
       - com.centurylinklabs.watchtower.enable=true
 

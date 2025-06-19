@@ -251,6 +251,3 @@ The user found the app generally intuitive but pointed out a few areas needing i
 ## Conclusion
 
 This QA plan showcases my approach to testing my CryptoAPI project with the goal of ensuring reliability, usability, code quality, and functionality. By having implemented the CI/CD pipeline any changes made and pushed to the project will be tested and feedback will be provided to showcase the effect of the new code.
----
-
-

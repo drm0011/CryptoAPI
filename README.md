@@ -146,17 +146,20 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v2.1.0 
       with:
         username: ${{ secrets.DOCKER_USERNAME }}  
         password: ${{ secrets.DOCKER_PASSWORD }}  
 
-    - name: Build Docker Image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/crypto-backend-image .
-
-    - name: Push Docker Image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/crypto-backend-image
+    - name: Build and push with Compose
+      run: |
+        docker compose build
+        docker tag rdk011/crypto-backend-image:latest ${{ secrets.DOCKER_USERNAME }}/crypto-backend-image:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/crypto-backend-image:latest
 ```
 
 In addition to the standard Docker build and push workflow, the application supports automated redeployment using Docker Compose and Watchtower.
@@ -172,12 +175,17 @@ services:
   backend:
     image: rdk011/crypto-backend-image:latest
     container_name: crypto-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=CryptoAppDb;User Id=sa;Password=StrongPassword123!;Encrypt=False;TrustServerCertificate=True
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     labels:
       - com.centurylinklabs.watchtower.enable=true
 

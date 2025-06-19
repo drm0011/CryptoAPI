@@ -1,4 +1,3 @@
-
 # Quality Assurance Plan: CryptoAPI
 
 ## Objective
@@ -105,8 +104,7 @@ jobs:
 
       - name: Run Tests with Coverage
         run: |
-          dotnet test CryptoAPI.TestProject/CryptoAPI.TestProject.csproj --configuration Release \
-            --collect:"XPlat Code Coverage"
+          dotnet test CryptoAPI.TestProject/CryptoAPI.TestProject.csproj --configuration Release             --collect:"XPlat Code Coverage"
 
       - name: Locate Coverage File
         id: locate_coverage
@@ -119,8 +117,7 @@ jobs:
 
       - name: Download Codacy Coverage Reporter
         run: |
-          curl -Ls https://github.com/codacy/codacy-coverage-reporter/releases/latest/download/codacy-coverage-reporter-linux \
-            -o codacy-coverage-reporter && chmod +x codacy-coverage-reporter
+          curl -Ls https://github.com/codacy/codacy-coverage-reporter/releases/latest/download/codacy-coverage-reporter-linux             -o codacy-coverage-reporter && chmod +x codacy-coverage-reporter
 
       - name: Upload Coverage to Codacy
         env:
@@ -130,7 +127,7 @@ jobs:
 
 ---
 
-### CD: Docker Image Build and Push
+### CD: Docker Image Build, Push and Docker Compose Deployment with Watchtower
 
 ```yaml
 name: Docker Build and Push
@@ -162,8 +159,98 @@ jobs:
       run: docker push ${{ secrets.DOCKER_USERNAME }}/crypto-backend-image
 ```
 
+In addition to the standard Docker build and push workflow, the application supports automated redeployment using Docker Compose and Watchtower.
+
+This setup ensures that the backend container is always running the latest image from Docker Hub. Watchtower checks for updates at 30-second intervals and restarts the service if an update is detected.
+
+**docker-compose.yml:**
+
+```yaml
+version: '3.8'
+
+services:
+  backend:
+    image: rdk011/crypto-backend-image:latest
+    container_name: crypto-backend
+    restart: always
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=CryptoAppDb;User Id=sa;Password=StrongPassword123!;Encrypt=False;TrustServerCertificate=True
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --label-enable --interval 30 --cleanup
+```
+
+---
+
+## Usability Testing - Crypto Portfolio App
+
+### Objective, Participants, Environment, and Test Tasks
+
+This test evaluates how easily users can interact with the core features of the Crypto Portfolio app: registration, login, market browsing, portfolio management, and real-time notes.
+
+- **Target users**: Beginner to intermediate crypto investors  
+- **Number of participants**: 1  
+- **Environment**: Desktop computer using a web browser  
+
+**Test Tasks:**
+
+| Task No. | Task Description                           | Success Criteria                                             |
+|----------|--------------------------------------------|--------------------------------------------------------------|
+| 1        | Register a new user account                | User creates an account and is redirected to the dashboard   |
+| 2        | Log in using provided credentials          | User logs in without errors                                  |
+| 3        | Search for a specific coin (e.g., Bitcoin) | Coin appears in search results                               |
+| 4        | Add the coin to your portfolio             | Coin is added and visible in the portfolio view              |
+| 5        | Open the coin detail page and write a note | Note is submitted and appears in real-time                   |
+| 6        | Log out of the application                 | User is logged out and redirected to the login screen        |
+
+---
+
+### Metrics Collected
+
+- Task success rate (complete/incomplete)  
+- User-reported ease/difficulty per task  
+- Notes on usability issues or confusion  
+
+---
+
+### Post-Test Questions
+
+- What did you find difficult or unclear?  
+- Which features were the most intuitive?  
+- Any improvements you’d suggest?
+
+---
+
+### Summary of Results
+
+All tasks (1–6) were successfully completed.  
+The user found the app generally intuitive but pointed out a few areas needing improvement.
+
+#### Unclear or Confusing Aspects:
+- Difficulty changing currency (USD to EUR)
+- Market search lacked filtering options (e.g., filter by popularity)
+- Error messages were vague or missing
+- Confusion around ability to add duplicate coin entries
+
+#### Positive Feedback:
+- Login, registration, and notes features were intuitive
+- Market graph provided useful and relevant information
+
 ---
 
 ## Conclusion
 
-This QA plan showcases my approach to testing my CryptoAPI project with the goal of ensuring reliability, code quality, and functionality. By having implemented the CI/CD pipeline any changes made and pushed to the project will be tested and feedback will be provided to showcase the effect of the new code.
+This QA plan showcases my approach to testing my CryptoAPI project with the goal of ensuring reliability, usability, code quality, and functionality. By having implemented the CI/CD pipeline any changes made and pushed to the project will be tested and feedback will be provided to showcase the effect of the new code.
+---
+
+

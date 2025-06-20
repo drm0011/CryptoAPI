@@ -102,9 +102,9 @@ namespace CryptoAPI.TestProject
         [TestMethod]
         public async Task AddOrUpdateNoteAsync_CallsRepo()
         {
-            await _service.AddOrUpdateNoteAsync(1, "btc", "Note");
+            await _service.AddOrUpdateNoteAsync(1, "btc", "Note", "Neutral");
 
-            _mockRepo.Verify(r => r.AddOrUpdateNoteAsync(1, "btc", "Note"), Times.Once);
+            _mockRepo.Verify(r => r.AddOrUpdateNoteAsync(1, "btc", "Note", "Neutral"), Times.Once);
         }
     }
 }

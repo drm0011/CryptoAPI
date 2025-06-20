@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
+using System.Web;
+using System.Net.Http.Json;
 
 namespace CryptoAPI.ExternalAPI
 {
@@ -39,9 +42,9 @@ namespace CryptoAPI.ExternalAPI
             }
         }
 
-        public async Task<string> GetCoinInfoAsync(string id)
+        public async Task<string> GetCoinInfoAsync(string id, string vsCurrency)
         {
-            var url = $"https://api.coingecko.com/api/v3/coins/{id}";
+            var url = $"https://api.coingecko.com/api/v3/coins/{id}?vs_currency={vsCurrency}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "CryptoAPI/1.0");
             request.Headers.Add("x-cg-demo-api-key", _apiKey);
@@ -73,5 +76,22 @@ namespace CryptoAPI.ExternalAPI
             throw new HttpRequestException($"Failed to fetch market chart: {response.StatusCode} {response.ReasonPhrase}");
         }
 
+        public async Task<MarketChartResult> GetCoinMarketChartAsync(string coinId, string currency, int days)
+        {
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["vs_currency"] = currency;
+            query["days"] = days.ToString();
+
+            var url = $"https://api.coingecko.com/api/v3/coins/{coinId}/market_chart?{query}";
+
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Add("x-cg-demo-api-key", _apiKey);
+
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"CoinGecko API error: {response.StatusCode}");
+
+            return await response.Content.ReadFromJsonAsync<MarketChartResult>();
+        }
     }
 }

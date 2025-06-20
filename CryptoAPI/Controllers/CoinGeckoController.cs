@@ -24,12 +24,24 @@ namespace CryptoAPI.Controllers
         }
 
 
-        // GET /coininfo?id=bitcoin
+        // GET /coininfo?id=bitcoin&vsCurrency=usd
         [HttpGet("coininfo")]
-        public async Task<IActionResult> GetCoinInfo([FromQuery] string id)
+        public async Task<IActionResult> GetCoinInfo([FromQuery] string id, [FromQuery] string vsCurrency)
         {
-            var json = await _coinGeckoService.GetCoinInfoAsync(id);
+            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(vsCurrency))
+                return BadRequest("Both 'id' and 'vsCurrency' query parameters are required.");
+
+            var json = await _coinGeckoService.GetCoinInfoAsync(id, vsCurrency);
             var data = JsonSerializer.Deserialize<JsonElement>(json);
+
+            var marketData = data.GetProperty("market_data");
+
+            // extract the requested currency values
+            if (!marketData.GetProperty("current_price").TryGetProperty(vsCurrency, out var priceElem) ||
+                !marketData.GetProperty("market_cap").TryGetProperty(vsCurrency, out var marketCapElem))
+            {
+                return BadRequest($"Currency '{vsCurrency}' not available for coin '{id}'.");
+            }
 
             var result = new
             {
@@ -37,9 +49,9 @@ namespace CryptoAPI.Controllers
                 name = data.GetProperty("name").GetString(),
                 symbol = data.GetProperty("symbol").GetString(),
                 image = data.GetProperty("image").GetProperty("small").GetString(),
-                price = data.GetProperty("market_data").GetProperty("current_price").GetProperty("usd").GetDecimal(),
-                marketCap = data.GetProperty("market_data").GetProperty("market_cap").GetProperty("usd").GetDecimal(),
-                change24h = data.GetProperty("market_data").GetProperty("price_change_percentage_24h").GetDecimal()
+                price = priceElem.GetDecimal(),
+                marketCap = marketCapElem.GetDecimal(),
+                change24h = marketData.GetProperty("price_change_percentage_24h").GetDecimal()
             };
 
             return Ok(result);
@@ -49,8 +61,8 @@ namespace CryptoAPI.Controllers
         [HttpGet("coincandles")]
         public async Task<IActionResult> GetCoinChart(
             [FromQuery] string id,
-            [FromQuery] string vsCurrency = "usd",
-            [FromQuery] int days = 7)
+            [FromQuery] string vsCurrency,
+            [FromQuery] int days = 30)
         {
             var result = await _coinGeckoService.GetMarketChartAsync(id, vsCurrency, days);
             return Content(result, "application/json");

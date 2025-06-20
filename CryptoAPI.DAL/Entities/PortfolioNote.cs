@@ -12,6 +12,7 @@ namespace CryptoAPI.DAL.Entities
         public int UserId { get; set; }
         public string CoinId { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
+        public string Mood { get; set; }
     }
 
 }

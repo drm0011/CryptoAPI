@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using CryptoAPI.Core.Interfaces;
 using CryptoAPI.Core.Models;
 using CryptoAPI.DAL;
 using CryptoAPI.DAL.Entities;
@@ -21,6 +22,7 @@ namespace CryptoAPI.TestProject
     {
         private CryptoAPIContext _context;
         private PortfolioRepository _repository;
+        private ICoinGeckoService _coinGeckoService;
         private IMapper _mapper;
 
         [TestInitialize]
@@ -38,7 +40,7 @@ namespace CryptoAPI.TestProject
             });
             _mapper = mapperConfig.CreateMapper();
 
-            _repository = new PortfolioRepository(_context, _mapper);
+            _repository = new PortfolioRepository(_context, _mapper, _coinGeckoService);
         }
 
         [TestCleanup]
@@ -115,7 +117,7 @@ namespace CryptoAPI.TestProject
         [TestMethod]
         public async Task AddOrUpdateNoteAsync_AddsNote_WhenNotExists()
         {
-            await _repository.AddOrUpdateNoteAsync(1, "btc", "First note");
+            await _repository.AddOrUpdateNoteAsync(1, "btc", "First note", "Neutral");
 
             var note = await _context.PortfolioNotes.FirstOrDefaultAsync(n => n.UserId == 1 && n.CoinId == "btc");
             Assert.IsNotNull(note);
@@ -129,11 +131,12 @@ namespace CryptoAPI.TestProject
             {
                 UserId = 2,
                 CoinId = "eth",
-                Note = "Old note"
+                Note = "Old note",
+                Mood="Neutral"
             });
             await _context.SaveChangesAsync();
 
-            await _repository.AddOrUpdateNoteAsync(2, "eth", "Updated note");
+            await _repository.AddOrUpdateNoteAsync(2, "eth", "Updated note", "Neutral");
 
             var note = await _context.PortfolioNotes.FirstOrDefaultAsync(n => n.UserId == 2 && n.CoinId == "eth");
             Assert.AreEqual("Updated note", note.Note);
@@ -143,8 +146,8 @@ namespace CryptoAPI.TestProject
         public async Task GetNotesByUserAsync_ReturnsNotes()
         {
             _context.PortfolioNotes.AddRange(
-                new PortfolioNote { UserId = 3, CoinId = "btc", Note = "Note A" },
-                new PortfolioNote { UserId = 3, CoinId = "eth", Note = "Note B" }
+                new PortfolioNote { UserId = 3, CoinId = "btc", Note = "Note A", Mood="Neutral" },
+                new PortfolioNote { UserId = 3, CoinId = "eth", Note = "Note B", Mood = "Neutral" }
             );
             await _context.SaveChangesAsync();
 

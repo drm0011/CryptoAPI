@@ -12,5 +12,6 @@ namespace CryptoAPI.Core.Models
         public int UserId { get; set; }
         public string CoinId { get; set; }
         public string Note { get; set; }
+        public string Mood { get; set; }
     }
 }

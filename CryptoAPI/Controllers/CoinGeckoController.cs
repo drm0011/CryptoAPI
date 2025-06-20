@@ -26,30 +26,55 @@ namespace CryptoAPI.Controllers
 
         // GET /coininfo?id=bitcoin
         [HttpGet("coininfo")]
-        public async Task<IActionResult> GetCoinInfo([FromQuery] string id)
+        public async Task<IActionResult> GetCoinInfo([FromQuery] string id, [FromQuery] string vsCurrency)
         {
-            var json = await _coinGeckoService.GetCoinInfoAsync(id);
-            var data = JsonSerializer.Deserialize<JsonElement>(json);
-
-            var result = new
+            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(vsCurrency))
             {
-                id = data.GetProperty("id").GetString(),
-                name = data.GetProperty("name").GetString(),
-                symbol = data.GetProperty("symbol").GetString(),
-                image = data.GetProperty("image").GetProperty("small").GetString(),
-                price = data.GetProperty("market_data").GetProperty("current_price").GetProperty("usd").GetDecimal(),
-                marketCap = data.GetProperty("market_data").GetProperty("market_cap").GetProperty("usd").GetDecimal(),
-                change24h = data.GetProperty("market_data").GetProperty("price_change_percentage_24h").GetDecimal()
-            };
+                return BadRequest("Both 'id' and 'vsCurrency' query parameters are required.");
+            }
 
-            return Ok(result);
+            try //remove try catch?
+            {
+                var json = await _coinGeckoService.GetCoinInfoAsync(id, vsCurrency);
+                var data = JsonSerializer.Deserialize<JsonElement>(json);
+
+                var marketData = data.GetProperty("market_data");
+
+                //extract the requested currency values
+                if (!marketData.GetProperty("current_price").TryGetProperty(vsCurrency, out var priceElem) ||
+                    !marketData.GetProperty("market_cap").TryGetProperty(vsCurrency, out var marketCapElem))
+                {
+                    return BadRequest($"Currency '{vsCurrency}' not available for coin '{id}'.");
+                }
+
+                var result = new
+                {
+                    id = data.GetProperty("id").GetString(),
+                    name = data.GetProperty("name").GetString(),
+                    symbol = data.GetProperty("symbol").GetString(),
+                    image = data.GetProperty("image").GetProperty("small").GetString(),
+                    price = priceElem.GetDecimal(),
+                    marketCap = marketCapElem.GetDecimal(),
+                    change24h = marketData.GetProperty("price_change_percentage_24h").GetDecimal()
+                };
+
+                return Ok(result);
+            }
+            catch (HttpRequestException httpEx)
+            {
+                return StatusCode(503, $"Error fetching data from CoinGecko: {httpEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Unexpected error: {ex.Message}");
+            }
         }
 
         // GET /coincandles?id=bitcoin&vsCurrency=usd&days=7
         [HttpGet("coincandles")]
         public async Task<IActionResult> GetCoinChart(
             [FromQuery] string id,
-            [FromQuery] string vsCurrency = "usd",
+            [FromQuery] string vsCurrency,
             [FromQuery] int days = 7)
         {
             var result = await _coinGeckoService.GetMarketChartAsync(id, vsCurrency, days);

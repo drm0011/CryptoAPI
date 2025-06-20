@@ -39,9 +39,9 @@ namespace CryptoAPI.ExternalAPI
             }
         }
 
-        public async Task<string> GetCoinInfoAsync(string id)
+        public async Task<string> GetCoinInfoAsync(string id, string vsCurrency)
         {
-            var url = $"https://api.coingecko.com/api/v3/coins/{id}";
+            var url = $"https://api.coingecko.com/api/v3/coins/{id}?vs_currency={vsCurrency}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add("User-Agent", "CryptoAPI/1.0");
             request.Headers.Add("x-cg-demo-api-key", _apiKey);

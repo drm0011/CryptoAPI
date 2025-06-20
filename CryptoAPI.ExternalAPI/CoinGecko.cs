@@ -89,7 +89,7 @@ namespace CryptoAPI.ExternalAPI
 
             var response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"CoinGecko API error: {response.StatusCode}");
+                throw new HttpRequestException($"CoinGecko API error: {response.StatusCode}");
 
             return await response.Content.ReadFromJsonAsync<MarketChartResult>();
         }

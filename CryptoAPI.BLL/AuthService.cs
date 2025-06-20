@@ -28,7 +28,7 @@ namespace CryptoAPI.BLL
         public async Task<string> RegisterAsync(User userRegister) 
         {
             if (await _userRepo.GetByUsernameAsync(userRegister.Username) != null)
-                throw new Exception("User already exists");
+                throw new InvalidOperationException("User already exists");
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegister.Password);
             var user = new User { Username = userRegister.Username, Password = passwordHash };
@@ -46,7 +46,7 @@ namespace CryptoAPI.BLL
         {
             var user = await _userRepo.GetByUsernameAsync(loginUser.Username);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginUser.Password, user.Password))
-                throw new Exception("Invalid username or password"); //custom 404 here?
+                throw new UnauthorizedAccessException("Invalid username or password.");
 
             return GenerateJwtToken(user);
         }

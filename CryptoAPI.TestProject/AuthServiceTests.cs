@@ -25,8 +25,6 @@ namespace CryptoAPI.TestProject
             _mockConfig = new Mock<IConfiguration>();
 
             _mockConfig.Setup(c => c["Jwt:Key"]).Returns("supersecurekeythatistotallylongenough");
-            _mockConfig.Setup(c => c["Jwt:Issuer"]).Returns("TestIssuer");
-            _mockConfig.Setup(c => c["Jwt:Audience"]).Returns("TestAudience");
 
             _authService = new AuthService(
                 _mockUserRepo.Object,
@@ -64,7 +62,7 @@ namespace CryptoAPI.TestProject
             _mockUserRepo.Setup(r => r.GetByUsernameAsync("existing"))
                          .ReturnsAsync(new User { Username = "existing", Password = "hashed" });
 
-            var ex = await Assert.ThrowsExceptionAsync<Exception>(() =>
+            var ex = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
                 _authService.RegisterAsync(input));
 
             Assert.AreEqual("User already exists", ex.Message);
@@ -95,7 +93,7 @@ namespace CryptoAPI.TestProject
             _mockUserRepo.Setup(r => r.GetByUsernameAsync("unknown"))
                          .ReturnsAsync((User)null!);
 
-            var ex = await Assert.ThrowsExceptionAsync<Exception>(() =>
+            var ex = await Assert.ThrowsExceptionAsync<UnauthorizedAccessException>(() =>
                 _authService.LoginAsync(new User { Username = "unknown", Password = "pass" }));
 
             Assert.AreEqual("Invalid username or password", ex.Message);
@@ -114,7 +112,7 @@ namespace CryptoAPI.TestProject
             _mockUserRepo.Setup(r => r.GetByUsernameAsync("user"))
                          .ReturnsAsync(stored);
 
-            var ex = await Assert.ThrowsExceptionAsync<Exception>(() =>
+            var ex = await Assert.ThrowsExceptionAsync<UnauthorizedAccessException>(() =>
                 _authService.LoginAsync(new User { Username = "user", Password = "wrongpass" }));
 
             Assert.AreEqual("Invalid username or password", ex.Message);

@@ -46,7 +46,7 @@ namespace CryptoAPI.BLL
         {
             var user = await _userRepo.GetByUsernameAsync(loginUser.Username);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginUser.Password, user.Password))
-                throw new UnauthorizedAccessException("Invalid username or password.");
+                throw new UnauthorizedAccessException("Invalid username or password");
 
             return GenerateJwtToken(user);
         }

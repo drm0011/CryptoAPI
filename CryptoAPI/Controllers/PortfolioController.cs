@@ -74,6 +74,30 @@ namespace CryptoAPI.Controllers
             return Ok(notes);
         }
 
+        [HttpGet("sentiment")]
+        public async Task<IActionResult> GetSentimentSummary()
+        {
+            var userId = GetCurrentUserId();
+            var result = await _portfolioService.GetSentimentSummaryAsync(userId.Value);
+
+            var dto = new SentimentSummaryDto
+            {
+                Bullish = result.Bullish,
+                Neutral = result.Neutral,
+                Bearish = result.Bearish
+            };
+
+            return Ok(dto);
+        }
+
+        [HttpGet("volatility")]
+        [Authorize]
+        public async Task<IActionResult> GetVolatility([FromQuery] int days = 7)
+        {
+            var userId = GetCurrentUserId();
+            var result = await _portfolioService.GetVolatilityForUserAsync(userId.Value, days);
+            return Ok(result);
+        }
 
         private int? GetCurrentUserId()
         {

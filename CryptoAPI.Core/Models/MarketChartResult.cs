@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace CryptoAPI.Core.Models
 {
-    public class Portfolio 
+    public class MarketChartResult
     {
-        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
+        //coin price history = [timestamp, price]
+        public List<List<decimal>> Prices { get; set; } = new();
     }
 }

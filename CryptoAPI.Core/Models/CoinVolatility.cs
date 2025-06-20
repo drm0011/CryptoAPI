@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace CryptoAPI.Core.Models
 {
-    public class Portfolio 
+    public class CoinVolatility
     {
-        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
+        public string CoinId { get; set; } = string.Empty;
+        public double VolatilityPercent { get; set; } 
     }
 }

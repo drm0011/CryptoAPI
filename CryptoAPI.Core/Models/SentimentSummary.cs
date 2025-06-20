@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptoAPI.Core.Models
 {
-    public class Portfolio 
+    public class SentimentSummary
     {
-        public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
+        public int Bullish { get; set; }
+        public int Neutral { get; set; }
+        public int Bearish { get; set; }
     }
 }

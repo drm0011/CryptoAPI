@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using CryptoAPI.Core.Interfaces;
 using CryptoAPI.Core.Models;
 using CryptoAPI.DAL;
 using CryptoAPI.DAL.Entities;
@@ -21,6 +22,7 @@ namespace CryptoAPI.TestProject
     {
         private CryptoAPIContext _context;
         private PortfolioRepository _repository;
+        private ICoinGeckoService _coinGeckoService;
         private IMapper _mapper;
 
         [TestInitialize]
@@ -38,7 +40,7 @@ namespace CryptoAPI.TestProject
             });
             _mapper = mapperConfig.CreateMapper();
 
-            _repository = new PortfolioRepository(_context, _mapper);
+            _repository = new PortfolioRepository(_context, _mapper, _coinGeckoService);
         }
 
         [TestCleanup]

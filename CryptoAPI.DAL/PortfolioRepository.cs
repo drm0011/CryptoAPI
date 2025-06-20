@@ -12,11 +12,13 @@ namespace CryptoAPI.DAL
     {
         private readonly CryptoAPIContext _context;
         private readonly IMapper _mapper;
+        private readonly ICoinGeckoService _coinGeckoService;
 
-        public PortfolioRepository(CryptoAPIContext context, IMapper mapper)
+        public PortfolioRepository(CryptoAPIContext context, IMapper mapper, ICoinGeckoService coinGeckoService)
         {
             _context = context;
             _mapper = mapper;
+            _coinGeckoService = coinGeckoService;
         }
 
         public async Task CreatePortfolioAsync(int userId) 
@@ -105,6 +107,32 @@ namespace CryptoAPI.DAL
                 .ToListAsync();
 
             return _mapper.Map<List<Core.Models.PortfolioNote>>(notesEntity);
+        }
+
+        public async Task RemoveNoteAsync(int userId, string coinId)
+        {
+            var note = await _context.PortfolioNotes
+                .FirstOrDefaultAsync(n => n.UserId == userId && n.CoinId == coinId);
+
+            if (note != null)
+            {
+                _context.PortfolioNotes.Remove(note);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<string>> GetUserPortfolioCoinIdsAsync(int userId)
+        {
+            return await _context.Portfolio
+                .Where(p => p.UserId == userId)
+                .SelectMany(p => p.PortfolioItems.Select(i => i.CoinId))
+                .ToListAsync();
+        }
+        public async Task<List<double>> GetCoinHistoricalPricesAsync(string coinId, int days)
+        {
+            var priceData = await _coinGeckoService.GetCoinMarketChartAsync(coinId, "usd", days);
+
+            return priceData.Prices.Select(p => (double)p[1]).ToList();   // [timestamp, price]
         }
 
     }

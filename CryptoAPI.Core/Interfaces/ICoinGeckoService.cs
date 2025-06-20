@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoAPI.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,6 @@ namespace CryptoAPI.Core.Interfaces
         Task<string> GetCoinMarketDataAsync(string vsCurrency, int perPage, int page);
         Task<string> GetCoinInfoAsync(string id, string vsCurrency);
         Task<string> GetMarketChartAsync(string id, string vsCurrency, int days);
+        Task<MarketChartResult> GetCoinMarketChartAsync(string coinId, string currency, int days);
     }
 }

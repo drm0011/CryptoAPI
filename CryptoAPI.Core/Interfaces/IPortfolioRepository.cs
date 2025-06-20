@@ -15,5 +15,7 @@ namespace CryptoAPI.Core.Interfaces
         Task CreatePortfolioAsync(int userId);
         Task AddOrUpdateNoteAsync(int userId, string coinId, string note, string mood);
         Task<List<PortfolioNote>> GetNotesByUserAsync(int userId);
+        Task RemoveNoteAsync(int userId, string coinId);
+        Task<List<double>> GetCoinHistoricalPricesAsync(string coinId, int days);
     }
 }

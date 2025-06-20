@@ -9,11 +9,13 @@ using AutoMapper;
 using CryptoAPI;
 using CryptoAPI.Core.Models;
 using CryptoAPI.ExternalAPI;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, NameIdentifierUserIdProvider>();
 builder.Services.Configure<CoinGeckoOptions>(
     builder.Configuration.GetSection("CoinGecko"));
 

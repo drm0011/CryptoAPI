@@ -7,17 +7,21 @@ namespace CryptoAPI
     [Authorize]
     public class CommentsHub : Hub
     {
-        public async Task SendComment(int userId, string coinId, string note)
+        public override async Task OnConnectedAsync()
         {
-            var portfolioNote = new PortfolioNote
+            var userId = Context.UserIdentifier;
+            if (userId != null)
             {
-                UserId = userId,
-                CoinId = coinId,
-                Note = note
-            };
+                await Groups.AddToGroupAsync(Context.ConnectionId, $"user-{userId}");
+            }
+        }
+        public async Task SendComment(string coinId, string note)
+        {
+            var userId = Context.UserIdentifier;
+            if (userId == null) return; //exception throw here?
 
-            //broadcast the note to all clients or limit this to groups based on coinId?
-            await Clients.All.SendAsync("ReceiveComment", portfolioNote);
+            await Clients.Group($"user-{userId}")
+                .SendAsync("ReceiveComment", new { CoinId = coinId, Note = note });
         }
     }
 }

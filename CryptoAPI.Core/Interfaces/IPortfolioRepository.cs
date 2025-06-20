@@ -13,7 +13,7 @@ namespace CryptoAPI.Core.Interfaces
         Task AddPortfolioItemAsync(int userId, PortfolioItem portfolioItemDto);
         Task RemovePortfolioItemAsync(int userId, string coinId);
         Task CreatePortfolioAsync(int userId);
-        Task AddOrUpdateNoteAsync(int userId, string coinId, string note);
+        Task AddOrUpdateNoteAsync(int userId, string coinId, string note, string mood);
         Task<List<PortfolioNote>> GetNotesByUserAsync(int userId);
     }
 }

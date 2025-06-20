@@ -61,7 +61,7 @@ namespace CryptoAPI.Controllers
         public async Task<IActionResult> AddNote([FromBody] NoteRequest request)
         {
             var userId = GetCurrentUserId();
-            await _portfolioService.AddOrUpdateNoteAsync(userId.Value, request.CoinId, request.Note); // .Value?
+            await _portfolioService.AddOrUpdateNoteAsync(userId.Value, request.CoinId, request.Note, request.Mood); // .Value?
             return Ok();
         }
 

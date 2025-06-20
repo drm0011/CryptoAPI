@@ -59,9 +59,9 @@ namespace CryptoAPI.BLL
             return _portfolioRepo.GetNotesByUserAsync(userId);
         }
 
-        public Task AddOrUpdateNoteAsync(int userId, string coinId, string note)
+        public Task AddOrUpdateNoteAsync(int userId, string coinId, string note, string mood)
         {
-            return _portfolioRepo.AddOrUpdateNoteAsync(userId, coinId, note);
+            return _portfolioRepo.AddOrUpdateNoteAsync(userId, coinId, note, mood);
         }
     }
 }

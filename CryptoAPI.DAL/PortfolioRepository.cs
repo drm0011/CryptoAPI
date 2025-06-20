@@ -74,7 +74,7 @@ namespace CryptoAPI.DAL
             }
         }
 
-        public async Task AddOrUpdateNoteAsync(int userId, string coinId, string note)
+        public async Task AddOrUpdateNoteAsync(int userId, string coinId, string note, string mood)
         {
             var existing = await _context.PortfolioNotes
                 .FirstOrDefaultAsync(n => n.UserId == userId && n.CoinId == coinId);
@@ -82,6 +82,7 @@ namespace CryptoAPI.DAL
             if (existing != null)
             {
                 existing.Note = note;
+                existing.Mood = mood;
             }
             else
             {
@@ -89,7 +90,8 @@ namespace CryptoAPI.DAL
                 {
                     UserId = userId,
                     CoinId = coinId,
-                    Note = note
+                    Note = note,
+                    Mood = mood
                 });
             }
 

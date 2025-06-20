@@ -18,6 +18,17 @@ namespace CryptoAPI.DAL
         public DbSet<Portfolio> Portfolio { get; set; }
         public DbSet<PortfolioItem> PortfolioItem { get; set; }
         public DbSet<PortfolioNote> PortfolioNotes { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<PortfolioNote>()
+                .HasIndex(p => new { p.UserId, p.CoinId })
+                .IsUnique();
+
+            modelBuilder.Entity<PortfolioItem>()
+                .HasIndex(p => new { p.PortfolioId, p.CoinId })
+                .IsUnique(); 
+        }
     }
 }

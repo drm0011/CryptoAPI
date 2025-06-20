@@ -14,7 +14,5 @@ namespace CryptoAPI.DAL.Entities
         public Portfolio Portfolio { get; set; }
         public string CoinId { get; set; }
         public string CoinName { get; set; }
-        [Precision(18,8)]
-        public decimal Amount { get; set; }
     }
 }

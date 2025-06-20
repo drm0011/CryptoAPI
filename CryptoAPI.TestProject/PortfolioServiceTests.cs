@@ -32,7 +32,7 @@ namespace CryptoAPI.TestProject
             {
                 PortfolioItems = new List<PortfolioItem>
                 {
-                    new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin", Amount = 1 }
+                    new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin" }
                 }
             };
 
@@ -56,7 +56,7 @@ namespace CryptoAPI.TestProject
         [TestMethod]
         public async Task AddPortfolioItemAsync_CallsRepo_WhenItemIsValid()
         {
-            var item = new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin", Amount = 1 };
+            var item = new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin" };
 
             await _service.AddPortfolioItemAsync(1, item);
 

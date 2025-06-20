@@ -3,6 +3,7 @@ using CryptoAPI.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoAPI.DAL.Migrations
 {
     [DbContext(typeof(CryptoAPIContext))]
-    partial class CryptoAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20250618085014_AddUniqueIndexToPortfolioNotes")]
+    partial class AddUniqueIndexToPortfolioNotes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +57,7 @@ namespace CryptoAPI.DAL.Migrations
 
                     b.Property<string>("CoinId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoinName")
                         .IsRequired()
@@ -65,8 +68,7 @@ namespace CryptoAPI.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PortfolioId", "CoinId")
-                        .IsUnique();
+                    b.HasIndex("PortfolioId");
 
                     b.ToTable("PortfolioItem");
                 });

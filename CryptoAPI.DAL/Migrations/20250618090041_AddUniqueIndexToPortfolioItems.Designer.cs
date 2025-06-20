@@ -3,6 +3,7 @@ using CryptoAPI.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoAPI.DAL.Migrations
 {
     [DbContext(typeof(CryptoAPIContext))]
-    partial class CryptoAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20250618090041_AddUniqueIndexToPortfolioItems")]
+    partial class AddUniqueIndexToPortfolioItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

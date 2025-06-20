@@ -12,7 +12,5 @@ namespace CryptoAPI.Core.Models
         public string CoinId { get; set; }
 
         public string CoinName { get; set; }
-
-        public decimal Amount { get; set; }
     }
 }

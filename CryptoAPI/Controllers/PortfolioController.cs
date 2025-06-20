@@ -39,8 +39,7 @@ namespace CryptoAPI.Controllers
             var portfolioItem = new PortfolioItem
             {
                 CoinId = portfolioItemDto.CoinId,
-                CoinName = portfolioItemDto.CoinName,
-                Amount = portfolioItemDto.Amount
+                CoinName = portfolioItemDto.CoinName
             };
 
             await _portfolioService.AddPortfolioItemAsync(userId.Value, portfolioItem);

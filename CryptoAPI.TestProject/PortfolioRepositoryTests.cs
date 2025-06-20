@@ -56,7 +56,7 @@ namespace CryptoAPI.TestProject
                 UserId = 1,
                 PortfolioItems = new List<DAL.Entities.PortfolioItem>
                 {
-                    new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin", Amount = 1.2m }
+                    new PortfolioItem { CoinId = "btc", CoinName = "Bitcoin" }
                 }
             });
             await _context.SaveChangesAsync();
@@ -79,7 +79,7 @@ namespace CryptoAPI.TestProject
             });
             await _context.SaveChangesAsync();
 
-            var item = new Core.Models.PortfolioItem { CoinId = "eth", CoinName = "Ethereum", Amount = 2m };
+            var item = new Core.Models.PortfolioItem { CoinId = "eth", CoinName = "Ethereum" };
             await _repository.AddPortfolioItemAsync(3, item);
 
             var portfolio = await _context.Portfolio.Include(p => p.PortfolioItems).FirstAsync(p => p.UserId == 3);
@@ -95,7 +95,7 @@ namespace CryptoAPI.TestProject
                 UserId = 4,
                 PortfolioItems = new List<DAL.Entities.PortfolioItem>
                 {
-                    new DAL.Entities.PortfolioItem { CoinId = "btc", CoinName = "Bitcoin", Amount = 1m }
+                    new DAL.Entities.PortfolioItem { CoinId = "btc", CoinName = "Bitcoin" }
                 }
             });
             await _context.SaveChangesAsync();
